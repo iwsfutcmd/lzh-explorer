@@ -119,12 +119,22 @@ sources reproduces those files byte for byte.
 ```
 pipeline/             Python (stdlib only): download, verify, normalize, emit JSON
   texts.toml          curated text metadata (ids, normalized titles, English titles)
-  lzh_pipeline/       schalmey.py (dataset reader), unihan.py, sources.py, build.py
+  lzh_pipeline/       schalmey.py (dataset reader), unihan.py, sources.py, build.py;
+                      refs.py (read-only client for the maintainer's reference library)
 public/data/          generated data served with the site
 src/lib/              data loading, statistics, search, collation, i18n, state
 src/components/       Svelte 5 UI
 .github/workflows/    CI and GitHub Pages deployment
 ```
+
+### Reference library (maintainer only)
+
+`cd pipeline && uv run lzh-refs find <words>` (also `status`, `ls`, `cat`, `pull`)
+reads the maintainer's private library of grammars and dictionaries. It goes through
+nabu's [references relay](https://github.com/iwsfutcmd/nabu/tree/main/apps/references),
+read-only, and needs that relay's address (`NABU_REFS_URL`) and key, so it does nothing
+for anyone else. The books are copyrighted: no book, page image or extracted text
+enters this repository or the site. See [CLAUDE.md](CLAUDE.md).
 
 ### Deployment
 

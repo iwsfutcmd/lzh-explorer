@@ -9,3 +9,8 @@ pipeline/.cache/
 pipeline/.venv/
 __pycache__/
 .pytest_cache/
+
+# Books from the owner's reference library never enter the repo (CLAUDE.md)
+*.pdf
+*.djvu
+*.epub

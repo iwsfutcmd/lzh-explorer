@@ -8,6 +8,7 @@ dependencies = []
 
 [project.scripts]
 lzh-build = "lzh_pipeline.build:main"
+lzh-refs = "lzh_pipeline.refs:main"
 
 [dependency-groups]
 dev = ["pytest>=8"]
