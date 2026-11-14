@@ -135,3 +135,30 @@ export const loadUnihan = () => getJSON<Unihan>('unihan.json');
 export async function loadMatrix(kind: 'chars' | 'words', manifest: Manifest): Promise<Matrix> {
   return toMatrix(await getJSON<RawMatrix>(`${kind}.json`), manifest);
 }
+
+// ---------------------------------------------------- parts of speech ----
+
+/** UPOS counts and glosses per word form, from the UD Kyoto treebank. */
+export interface PosData {
+  source: string;
+  upos: string[];
+  tokens: number;
+  docs: { id: string; title: string; tokens: number }[];
+  /** form -> [[UPOS index, count], ...] by descending count */
+  items: Record<string, [number, number][]>;
+  /** form -> [[English gloss, count], ...] (top 5) */
+  gloss: Record<string, [string, number][]>;
+}
+
+export const FW_CATEGORIES = [
+  'pron', 'dem', 'interr', 'neg', 'prep', 'conj', 'final', 'initial', 'struct', 'adv', 'aux', 'copula',
+] as const;
+export type FwCategory = (typeof FW_CATEGORIES)[number];
+
+export interface FunctionWords {
+  categories: FwCategory[];
+  items: Record<string, { cat: FwCategory[]; vernacular?: boolean }>;
+}
+
+export const loadPos = () => getJSON<PosData>('pos.json');
+export const loadFunctionWords = () => getJSON<FunctionWords>('function-words.json');

@@ -4,14 +4,21 @@
 import { collationPositions } from './collation';
 import {
   CORPUS_IDS,
+  FW_CATEGORIES,
+  loadFunctionWords,
   loadManifest,
+  loadPos,
   loadMatrix,
   loadUnihan,
+  type FunctionWords,
+  type FwCategory,
   type Manifest,
   type Matrix,
+  type PosData,
   type Unihan,
 } from './data';
 import { entryMatches, parseQuery, parseRS, pinyinKey } from './han';
+import { posColumns } from './pos';
 import { settings } from './settings.svelte';
 import { aggregate, cumulativeShare, logLikelihood, logRatio, makeSelection, type Freq } from './stats';
 
@@ -20,6 +27,8 @@ import { aggregate, cumulativeShare, logLikelihood, logRatio, makeSelection, typ
 class Model {
   manifest = $state.raw<Manifest | null>(null);
   unihan = $state.raw<Unihan | null>(null);
+  pos = $state.raw<PosData | null>(null);
+  fw = $state.raw<FunctionWords | null>(null);
   chars = $state.raw<Matrix | null>(null);
   words = $state.raw<Matrix | null>(null);
   wordsStatus = $state<'idle' | 'loading' | 'ready' | 'error'>('idle');
@@ -31,7 +40,14 @@ class Model {
   async init() {
     try {
       const manifest = await loadManifest();
-      const [chars, unihan] = await Promise.all([loadMatrix('chars', manifest), loadUnihan()]);
+      const [chars, unihan, pos, fw] = await Promise.all([
+        loadMatrix('chars', manifest),
+        loadUnihan(),
+        loadPos(),
+        loadFunctionWords(),
+      ]);
+      this.pos = pos;
+      this.fw = fw;
       this.manifest = manifest;
       this.chars = chars;
       this.unihan = unihan;
@@ -58,7 +74,8 @@ export const model = new Model();
 // ------------------------------------------------------------ view state ----
 
 export type View = 'chars' | 'words' | 'about';
-export type SortKey = 'count' | 'item' | 'range' | 'dp' | 'refIpm' | 'logRatio' | 'g2';
+export type SortKey = 'count' | 'item' | 'range' | 'dp' | 'refIpm' | 'logRatio' | 'g2' | 'pos';
+export type WordClass = 'all' | 'function' | 'content';
 export type Display = 'table' | 'grid';
 export const PRESETS = ['all', ...CORPUS_IDS] as const;
 
@@ -73,13 +90,16 @@ const DEFAULTS = {
   strokesMax: null as number | null,
   minCount: 1,
   lengths: [2, 3, 4],
+  cls: 'all' as WordClass,
+  fwCat: '' as FwCategory | '',
+  pos: '',
   sortKey: 'count' as SortKey,
   sortDir: 'desc' as 'asc' | 'desc',
   display: 'table' as Display,
   sel: null as string | null,
 };
 
-const SORT_KEYS: SortKey[] = ['count', 'item', 'range', 'dp', 'refIpm', 'logRatio', 'g2'];
+const SORT_KEYS: SortKey[] = ['count', 'item', 'range', 'dp', 'refIpm', 'logRatio', 'g2', 'pos'];
 
 class AppState {
   view = $state(DEFAULTS.view);
@@ -98,6 +118,11 @@ class AppState {
   sortDir = $state(DEFAULTS.sortDir);
   display = $state(DEFAULTS.display);
   sel = $state(DEFAULTS.sel);
+  /** function-word filter */
+  cls = $state(DEFAULTS.cls);
+  fwCat = $state(DEFAULTS.fwCat);
+  /** dominant UPOS filter */
+  pos = $state(DEFAULTS.pos);
 
   resetFilters() {
     this.block = DEFAULTS.block;
@@ -106,13 +131,17 @@ class AppState {
     this.strokesMax = DEFAULTS.strokesMax;
     this.minCount = DEFAULTS.minCount;
     this.lengths = [...DEFAULTS.lengths];
+    this.cls = DEFAULTS.cls;
+    this.fwCat = DEFAULTS.fwCat;
+    this.pos = DEFAULTS.pos;
   }
 
   setSort(key: SortKey) {
     if (this.sortKey === key) this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
     else {
       this.sortKey = key;
-      this.sortDir = key === 'item' ? 'asc' : 'desc';
+      // ascending by default for the item and for POS share (most flexible first)
+      this.sortDir = key === 'item' || key === 'pos' ? 'asc' : 'desc';
     }
   }
 
@@ -137,6 +166,9 @@ class AppState {
     if (this.strokesMin != null || this.strokesMax != null) p.set('s', `${this.strokesMin ?? ''}-${this.strokesMax ?? ''}`);
     if (this.minCount !== DEFAULTS.minCount) p.set('min', String(this.minCount));
     if (list(this.lengths) !== list(DEFAULTS.lengths)) p.set('len', list(this.lengths));
+    if (this.cls !== DEFAULTS.cls) p.set('cls', this.cls);
+    if (this.fwCat) p.set('fwc', this.fwCat);
+    if (this.pos) p.set('pos', this.pos);
     if (this.sortKey !== DEFAULTS.sortKey || this.sortDir !== DEFAULTS.sortDir)
       p.set('sort', (this.sortDir === 'desc' ? '-' : '') + this.sortKey);
     if (this.display !== DEFAULTS.display) p.set('d', this.display);
@@ -162,6 +194,11 @@ class AppState {
     this.minCount = Math.max(0, Number(p.get('min') ?? DEFAULTS.minCount) || 0);
     const len = list(p.get('len'))?.map(Number).filter((n) => n >= 2 && n <= 4);
     this.lengths = len?.length ? len : [...DEFAULTS.lengths];
+    const cls = p.get('cls');
+    this.cls = cls === 'function' || cls === 'content' ? cls : 'all';
+    const fwc = p.get('fwc') as FwCategory | null;
+    this.fwCat = fwc && (FW_CATEGORIES as readonly string[]).includes(fwc) ? fwc : '';
+    this.pos = /^[A-Z]{1,5}$/.test(p.get('pos') ?? '') ? p.get('pos')! : '';
     const sort = p.get('sort') ?? '-count';
     const key = sort.replace(/^-/, '') as SortKey;
     this.sortKey = SORT_KEYS.includes(key) ? key : DEFAULTS.sortKey;
@@ -292,6 +329,12 @@ class Analysis {
     const smax = !isWords ? app.strokesMax : null;
     const lengths = isWords ? new Set(app.lengths) : null;
     const minCount = app.minCount;
+    const fwItems = model.fw?.items ?? {};
+    const cls = app.cls;
+    const fwCat = app.fwCat;
+    const posData = model.pos;
+    const posIdx = app.pos && posData ? posData.upos.indexOf(app.pos) : -1;
+    const posCols = posData && (posIdx >= 0 || app.sortKey === 'pos') ? posColumns(m, posData) : null;
 
     const out: number[] = [];
     for (let i = 0; i < m.items.length; i++) {
@@ -311,6 +354,12 @@ class Analysis {
           if (smax != null && !(e?.ts != null && e.ts <= smax)) continue;
         }
       }
+      if (cls !== 'all' || fwCat) {
+        const entry = fwItems[item];
+        if (cls === 'content' ? !!entry : !entry) continue;
+        if (fwCat && cls !== 'content' && !entry?.cat.includes(fwCat)) continue;
+      }
+      if (posIdx >= 0 && posCols!.dominant[i] !== posIdx) continue;
       if (searching) {
         let hit = false;
         if (isWords) {
@@ -345,6 +394,9 @@ class Analysis {
         break;
       case 'g2':
         key = k?.g2 ?? null;
+        break;
+      case 'pos':
+        key = posCols?.sortShare ?? null;
         break;
       case 'item':
         key = collationPositions(m, settings.collation, unihan);

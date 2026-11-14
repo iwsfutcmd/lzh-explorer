@@ -1,8 +1,9 @@
 <script lang="ts">
   import { i18n, t } from '../lib/i18n/index.svelte';
-  import { analysis, app } from '../lib/state.svelte';
+  import { analysis, app, model } from '../lib/state.svelte';
   import { cumulativeShare, logSample, perMillion, type Freq } from '../lib/stats';
   import LineChart, { type Series } from './LineChart.svelte';
+  import FunctionHeatmap from './FunctionHeatmap.svelte';
 
   const isChars = $derived(app.view === 'chars');
   let open = $state(true);
@@ -81,6 +82,11 @@
         xLabel={t('charts.rank')}
       />
     </div>
+    {#if isChars && model.fw && open}
+      <div class="card wide">
+        <FunctionHeatmap />
+      </div>
+    {/if}
   </div>
 </details>
 
@@ -94,6 +100,7 @@
     margin-block-start: 0.5rem;
   }
   .card { padding-block-end: 0.5rem; }
+  .wide { grid-column: 1 / -1; min-inline-size: 0; }
   h3 { margin: 0; }
   p { margin-block: 0 0.4rem; }
 </style>

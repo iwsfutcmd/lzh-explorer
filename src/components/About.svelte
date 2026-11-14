@@ -14,6 +14,7 @@
 
   <h2>{t('about.data')}</h2>
   <p>{t('about.data.body')}</p>
+  {#if model.pos}<p>{t('about.data.pos', { tokens: model.pos.tokens })}</p>{/if}
   <ul class="sources">
     {#each manifest.sources as s (s.id)}
       <li class="card">
@@ -32,14 +33,14 @@
 
   <h2>{t('about.caveats')}</h2>
   <ul>
-    {#each ['words', 'hanshu', 'shared', 'editions'] as c (c)}
+    {#each ['words', 'hanshu', 'shared', 'editions', 'fw', 'pos'] as c (c)}
       <li>{t(`about.caveat.${c}` as MessageKey)}</li>
     {/each}
   </ul>
 
   <h2>{t('about.methods')}</h2>
   <ul>
-    {#each ['ipm', 'dp', 'keyness'] as c (c)}
+    {#each ['ipm', 'dp', 'keyness', 'entropy'] as c (c)}
       <li>{t(`about.method.${c}` as MessageKey)}</li>
     {/each}
   </ul>

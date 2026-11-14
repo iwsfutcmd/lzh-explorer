@@ -25,3 +25,24 @@ Derived from the Unicode Character Database 18.0.0 (Unihan, CJKRadicals.txt,
 Blocks.txt). © 1991–2026 Unicode, Inc. Distributed under the Unicode License
 v3, <https://www.unicode.org/license.txt>. A subset of fields is extracted for
 the characters attested in the corpora.
+
+## Part-of-speech profiles — `pos.json`
+
+Derived from the Universal Dependencies treebank UD Classical Chinese-Kyoto,
+release 2.19 (commit `ce0a583`), by Koichi Yasuoka, Christian Wittern,
+Tomohiko Morioka, Takumi Ikeda, Naoki Yamazaki, Yoshihiro Nikaido, Shingo
+Suzuki, Shigeki Moro, Yuan Li, Hiroyuki Shirasu and Kazunori Fujita
+(Institute for Research in Humanities, Kyoto University),
+<https://github.com/UniversalDependencies/UD_Classical_Chinese-Kyoto>.
+
+License: Creative Commons Attribution-ShareAlike 4.0 International
+(CC BY-SA 4.0), <https://creativecommons.org/licenses/by-sa/4.0/>. As an
+adaptation, `pos.json` is shared under the same license.
+
+Changes: Universal POS tags and English glosses (MISC `Gloss=`) are counted
+per word form over the whole treebank; only the five most frequent glosses per
+form are kept. Syntactic relations are not used.
+
+## Function-word list — `function-words.json`
+
+Compiled for this project (see `pipeline/function_words.toml`).

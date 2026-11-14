@@ -18,6 +18,11 @@ Outputs (all UTF-8, deterministic, no timestamps):
     coverage) is derived in the browser from these counts.
 ``unihan.json``
     ``{"之": {"rs": "4.3", "ts": 4, "cmn": ["zhī"], ...}, ...}``
+``pos.json``
+    Universal POS counts and top English glosses per word form in the UD
+    Classical Chinese-Kyoto treebank (CC BY-SA 4.0).
+``function-words.json``
+    The curated function-word list (pipeline/function_words.toml).
 """
 
 from __future__ import annotations
@@ -29,7 +34,7 @@ import tomllib
 import unicodedata
 from pathlib import Path
 
-from . import schalmey, sources, unihan
+from . import function_words, schalmey, sources, ud, unihan
 
 ROOT = Path(__file__).resolve().parents[2]
 PIPELINE = ROOT / "pipeline"
@@ -142,11 +147,24 @@ def build(out_dir: Path, cache_dir: Path) -> None:
     dump(out_dir / "words.json", {"texts": text_ids, "items": word_items, "cells": word_cells})
     dump(out_dir / "unihan.json", {c: han[c] for c in sorted(han, key=ord)})
 
+    pos = ud.read(sources.fetch(r, cache_dir) for r in sources.UD_KYOTO)
+    dump(out_dir / "pos.json", ud.to_json(pos))
+
+    fw = function_words.load(PIPELINE / "function_words.toml")
+    known = set(char_items) | set(word_items)
+    unknown = sorted(k for k in fw if k not in known)
+    if unknown:
+        raise ValueError(f"function_words.toml lists items absent from the data: {' '.join(unknown)}")
+    dump(out_dir / "function-words.json", function_words.to_json(fw))
+
     no_unihan = sorted(wanted - set(han), key=ord)
     print(
         f"{len(texts)} texts, {sum(tokens):,} tokens, {len(char_items):,} characters, "
         f"{len(word_items):,} words; {len(no_unihan)} characters without Unihan data: "
-        + " ".join(f"{c} U+{ord(c):04X}" for c in no_unihan),
+        + " ".join(f"{c} U+{ord(c):04X}" for c in no_unihan)
+        + f"\nPOS profiles: {pos.tokens:,} treebank tokens, {len(pos.upos):,} forms "
+        f"({sum(1 for c in char_items if c in pos.upos):,} of the corpus characters); "
+        f"{len(fw)} function-word entries",
         file=sys.stderr,
     )
 

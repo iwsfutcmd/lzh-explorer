@@ -8,6 +8,8 @@
   import { perMillion } from '../lib/stats';
   import Han from './Han.svelte';
   import LineChart, { type Series } from './LineChart.svelte';
+  import { profile } from '../lib/pos';
+  import type { FwCategory } from '../lib/data';
 
   const item = $derived(app.sel!);
   const isWord = $derived([...item].length > 1);
@@ -127,6 +129,15 @@
   const rs = $derived(parseRS(entry?.rs));
   const block = $derived(isWord ? undefined : blockOf(item, manifest.blocks));
   const VARIANTS = ['trad', 'simp', 'sem', 'spec', 'z', 'compat'] as const;
+
+  // ---- parts of speech and function-word status
+  const pos = $derived(model.pos ? profile(model.pos, item) : null);
+  const glosses = $derived(model.pos?.gloss[item] ?? []);
+  const fwEntry = $derived(model.fw?.items[item]);
+  function filterBy(cat: FwCategory) {
+    app.cls = 'function';
+    app.fwCat = cat;
+  }
 </script>
 
 <aside class="detail" aria-label={t('detail.label')}>
@@ -257,6 +268,54 @@
           </button>
         {/each}
       </div>
+    </section>
+  {/if}
+
+  {#if fwEntry}
+    <section>
+      <h3>{t('detail.function')}</h3>
+      <div class="chips">
+        {#each fwEntry.cat as c (c)}
+          <button class="chip small" onclick={() => filterBy(c)}>{t(`fw.${c}`)}</button>
+        {/each}
+        {#if fwEntry.vernacular}<span class="chip small disabled">{t('fw.vernacular')}</span>{/if}
+      </div>
+    </section>
+  {/if}
+
+  {#if model.pos}
+    <section>
+      <h3>{t('detail.pos')}</h3>
+      {#if pos}
+        <p class="small muted">{t('detail.pos.desc', { count: pos.n })}</p>
+        <ul class="bars">
+          {#each pos.dist as d (d.tag)}
+            <li title="{d.tag} · {i18n.int(d.count)}">
+              <span class="bar-label">{t(`upos.${d.tag}` as MessageKey)}</span>
+              <span class="track"><span class="fill" style="inline-size: {d.share * 100}%"></span></span>
+              <span class="num"><strong>{d.share < 0.005 ? '<' + i18n.pct(0.01, 0) : i18n.pct(d.share, 0)}</strong></span>
+            </li>
+          {/each}
+        </ul>
+        <dl class="facts">
+          <div>
+            <dt title={t('detail.pos.entropy.title')}>{t('detail.pos.entropy')}</dt>
+            <dd>{t('detail.pos.entropyValue', { value: i18n.fixed(pos.entropy, 2) })}</dd>
+          </div>
+        </dl>
+        {#if glosses.length}
+          <div class="glosses">
+            <span class="small secondary">{t('detail.glosses')}</span>
+            <div class="chips">
+              {#each glosses as [g, n] (g)}
+                <span class="chip small gloss-chip" lang="en">{g} <span class="muted">{i18n.int(n)}</span></span>
+              {/each}
+            </div>
+          </div>
+        {/if}
+      {:else}
+        <p class="small muted">{t('detail.pos.none')}</p>
+      {/if}
     </section>
   {/if}
 
@@ -398,6 +457,9 @@
   .chip:hover { background: var(--hover); }
   .chip.disabled { cursor: default; color: var(--muted); }
   .bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .chip.small { font-size: 0.8125rem; }
+  .gloss-chip { cursor: default; }
+  .glosses { display: grid; gap: 0.3rem; }
   .bars li { display: grid; grid-template-columns: minmax(4.5rem, 7rem) 1fr auto; gap: 0.5rem; align-items: center; font-size: 0.875rem; }
   .bars :global(.bar-label) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .track { block-size: 10px; }

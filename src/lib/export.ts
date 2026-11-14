@@ -3,6 +3,7 @@
 // exports from any UI locale are interchangeable.
 
 import { analysis, app, model } from './state.svelte';
+import { posColumns } from './pos';
 import { perMillion } from './stats';
 
 function cell(v: string | number | undefined): string {
@@ -23,6 +24,9 @@ export function downloadCSV() {
   const header = ['rank', 'item', 'count', 'per_million', 'texts', 'dp_norm'];
   if (isChars) header.push('cumulative_share', 'codepoint', 'mandarin', 'gloss');
   if (k) header.push('ref_count', 'ref_per_million', 'log_ratio', 'log_likelihood');
+  const pos = model.pos ? posColumns(m, model.pos) : null;
+  if (pos) header.push('pos_main', 'pos_main_share', 'pos_tokens');
+  header.push('function_categories');
 
   const lines = [header.join(',')];
   for (const i of analysis.results) {
@@ -40,6 +44,11 @@ export function downloadCSV() {
       row.push(cum?.[i], 'U+' + item.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0'), e?.cmn?.join(' '), e?.def);
     }
     if (k) row.push(k.refCount[i], perMillion(k.refCount[i], k.refTotal), k.lr[i], k.g2[i]);
+    if (pos) {
+      const d = pos.dominant[i];
+      row.push(d >= 0 ? model.pos!.upos[d] : undefined, pos.share[i], pos.n[i] || undefined);
+    }
+    row.push(model.fw?.items[item]?.cat.join(' '));
     lines.push(row.map(cell).join(','));
   }
 

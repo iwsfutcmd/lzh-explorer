@@ -51,6 +51,32 @@ BLOCKS = Remote(
 )
 
 
+# Universal Dependencies treebank of Classical Chinese (Kyoto), pinned to the
+# commit tagged r2.19.
+UD_KYOTO_COMMIT = "ce0a5837f4bc31e5b0fffb8da6a2fd079d18ded9"
+_UD_BASE = (
+    "https://raw.githubusercontent.com/UniversalDependencies/"
+    f"UD_Classical_Chinese-Kyoto/{UD_KYOTO_COMMIT}/"
+)
+UD_KYOTO = [
+    Remote(
+        url=_UD_BASE + "lzh_kyoto-ud-train.conllu",
+        filename="lzh_kyoto-ud-train-r2.19.conllu",
+        sha256="1f9b1933c7dea46c720bd4f94ec61188e2c5c2551660e439ed3fd3cc74b52749",
+    ),
+    Remote(
+        url=_UD_BASE + "lzh_kyoto-ud-dev.conllu",
+        filename="lzh_kyoto-ud-dev-r2.19.conllu",
+        sha256="8a8593b8356cee62e9451a7b2048764c2971db726c64f3f336b07f602917282d",
+    ),
+    Remote(
+        url=_UD_BASE + "lzh_kyoto-ud-test.conllu",
+        filename="lzh_kyoto-ud-test-r2.19.conllu",
+        sha256="e492ba5f5054ee560c33197e1681a5c18c3f21adff7dca82be3ed4af09cbf1e5",
+    ),
+]
+
+
 # Attribution metadata, shipped to the site in manifest.json and shown on the
 # About page. Keep in sync with data/README.md.
 ATTRIBUTION = [
@@ -84,6 +110,25 @@ ATTRIBUTION = [
         "license": "Unicode-3.0",
         "licenseUrl": "https://www.unicode.org/license.txt",
         "changes": "Subset of fields for the characters attested in the corpora.",
+    },
+    {
+        "id": "ud-kyoto",
+        "creator": (
+            "Koichi Yasuoka, Christian Wittern, Tomohiko Morioka, Takumi Ikeda, "
+            "Naoki Yamazaki, Yoshihiro Nikaido, Shingo Suzuki, Shigeki Moro, "
+            "Yuan Li, Hiroyuki Shirasu, Kazunori Fujita"
+        ),
+        "title": "UD Classical Chinese-Kyoto (Universal Dependencies 2.19)",
+        "publisher": "Universal Dependencies; Institute for Research in Humanities, Kyoto University",
+        "year": 2026,
+        "url": "https://github.com/UniversalDependencies/UD_Classical_Chinese-Kyoto",
+        "license": "CC-BY-SA-4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "changes": (
+            "Universal POS tags and English glosses counted per word form over the "
+            "whole treebank (train, dev and test); pos.json is shared under the "
+            "same license."
+        ),
     },
 ]
 

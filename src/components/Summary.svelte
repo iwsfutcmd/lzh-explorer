@@ -1,12 +1,25 @@
 <script lang="ts">
   import { i18n, t } from '../lib/i18n/index.svelte';
-  import { analysis, app } from '../lib/state.svelte';
+  import { analysis, app, model } from '../lib/state.svelte';
   import { coverage } from '../lib/stats';
 
   const FRACTIONS = [0.5, 0.8, 0.9, 0.95, 0.99];
   const f = $derived(analysis.freq);
   const isChars = $derived(app.view === 'chars');
   const cov = $derived(f && isChars ? coverage(f, FRACTIONS) : []);
+
+  // Share of character tokens that are listed function characters.
+  const fwShare = $derived.by(() => {
+    const m = analysis.matrix;
+    const fw = model.fw;
+    if (!f || !m || !fw || !isChars || !f.sel.total) return NaN;
+    let n = 0;
+    for (const item of Object.keys(fw.items)) {
+      const i = m.index.get(item);
+      if (i !== undefined) n += f.count[i];
+    }
+    return n / f.sel.total;
+  });
 </script>
 
 {#if f}
@@ -30,6 +43,12 @@
         <dt>{t('summary.hapax')}</dt>
         <dd>{i18n.int(f.hapax)}</dd>
       </div>
+      {#if !Number.isNaN(fwShare)}
+        <div class="tile" title={t('summary.functionShare.title')}>
+          <dt>{t('summary.functionShare')}</dt>
+          <dd>{i18n.pct(fwShare, 1)}</dd>
+        </div>
+      {/if}
       {#each FRACTIONS as frac, k (frac)}
         {#if isChars && frac >= 0.8}
           <div class="tile">

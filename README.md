@@ -38,8 +38,22 @@ The first tool is a **frequency explorer** for characters and words across
   - pinyin with or without tones (`zhi`, `zhi1`, `zhī`), jyutping, kana,
     hangul or Vietnamese;
   - English gloss.
-- **Filters:** Unicode block, radical, stroke count, minimum count, and word
-  length.
+- **Function words (虛詞):** a curated list of 169 characters and 52
+  expressions in 12 categories (pronouns, negatives, prepositions,
+  final particles, …), with Early Vernacular items marked. It drives a
+  function/content-word filter, a category filter, a function-word share for
+  any selection, and a heatmap of texts against function words (blue = more
+  frequent than in the selection overall, orange = less) that shows
+  stylistic and diachronic contrasts such as 於/于, 吾/我 or 弗/不.
+- **Part-of-speech profiles** from the UD Classical Chinese-Kyoto treebank
+  (433k tokens; covers 98% of the corpus's character tokens):
+  - each character's distribution over universal POS tags, with the
+    treebank's English glosses;
+  - word-class flexibility as the entropy of that distribution;
+  - a dominant-POS column, filter and sort (ascending sort ranks items by
+    flexibility).
+- **Filters:** Unicode block, radical, stroke count, minimum count, word
+  length, word class, function-word category, and dominant part of speech.
 - **Sorting:** by any column, with a choice of character collation (code point,
   radical-stroke, ICU pinyin / stroke / zhuyin, Korean, Japanese).
 - **Shareable URLs** for every view (corpus, comparison, search, filters and
@@ -79,6 +93,8 @@ and registering it in `LOCALES` in `src/lib/i18n/index.svelte.ts`.
 |---|---|---|
 | Tilman Schalmey (2021), *Raw frequency data: Thoughts on "Reliable" Learner's Vocabularies for Classical and Literary Chinese*, Zenodo, [doi:10.5281/zenodo.5638882](https://doi.org/10.5281/zenodo.5638882) | per-text character and word counts | CC BY 4.0 |
 | Unicode Character Database 18.0.0 (Unihan, CJKRadicals, Blocks) | readings, glosses, radicals, variants, blocks | Unicode License v3 |
+| Yasuoka et al., [UD Classical Chinese-Kyoto](https://github.com/UniversalDependencies/UD_Classical_Chinese-Kyoto) treebank, release 2.19 | part-of-speech profiles, glosses | CC BY-SA 4.0 (so `pos.json` is too) |
+| This project: [`pipeline/function_words.toml`](pipeline/function_words.toml) | function-word list | |
 
 See [`public/data/LICENSE.md`](public/data/LICENSE.md) for the attribution
 and the list of changes. Things to keep in mind when interpreting the numbers:
@@ -91,6 +107,15 @@ and the list of changes. Things to keep in mind when interpreting the numbers:
 - **The e-texts come from various digital editions** (the per-text source is
   on the About page), and character forms follow those editions. A few
   non-Han items occur (々, two CJK Radicals Supplement characters).
+- **The function-word list tags characters, not tokens.** A listed
+  character counts in all of its uses (之 is also the verb "go").
+  The list was checked against the treebank:
+  `uv run python -m lzh_pipeline.function_words --check` reports how the
+  treebank tags each entry.
+- **Part-of-speech profiles describe the treebank's texts** (論語, 孟子,
+  禮記, 戰國策, 楚辭, 唐詩三百首, 十八史略, three sutras), not the frequency
+  corpora. They may not fit other genres or the vernacular of the novels.
+  Flexibility ignores proper-noun uses.
 - **Some text titles in the dataset are corrected** (e.g. 漢詩外傳 → 韓詩外傳,
   宴子春秋 → 晏子春秋). Each correction is documented in
   [`pipeline/texts.toml`](pipeline/texts.toml).
@@ -119,7 +144,9 @@ sources reproduces those files byte for byte.
 ```
 pipeline/             Python (stdlib only): download, verify, normalize, emit JSON
   texts.toml          curated text metadata (ids, normalized titles, English titles)
-  lzh_pipeline/       schalmey.py (dataset reader), unihan.py, sources.py, build.py
+  function_words.toml curated function-word list
+  lzh_pipeline/       schalmey.py (dataset reader), unihan.py, ud.py (treebank),
+                      function_words.py, sources.py, build.py
 public/data/          generated data served with the site
 src/lib/              data loading, statistics, search, collation, i18n, state
 src/components/       Svelte 5 UI
@@ -138,5 +165,8 @@ Actions**.
 - Gries, S. Th. (2008). Dispersions and adjusted frequencies in corpora. *International Journal of Corpus Linguistics* 13(4).
 - Hardie, A. (2014). Log Ratio: an informal introduction. CASS, Lancaster University.
 - Lijffijt, J. & Gries, S. Th. (2012). Correction to Stefan Th. Gries’ "Dispersions and adjusted frequencies in corpora". *IJCL* 17(1).
+- Pulleyblank, E. G. (1995). *Outline of Classical Chinese Grammar*. UBC Press.
 - Rayson, P. & Garside, R. (2000). Comparing corpora using frequency profiling. *Workshop on Comparing Corpora*, ACL.
 - Schalmey, T. (2013). Corpus-driven creation of a reliable learner’s vocabulary for Classical Chinese. *Taiwan Journal of Chinese as a Second Language* 7(2), 109–137.
+- Yasuoka, K. et al. (2022). Designing Universal Dependencies for Classical Chinese and its application. *Journal of Information Processing Society of Japan* 63(2), 355–363.
+- Zádrapa, L. (2011). *Word-Class Flexibility in Classical Chinese: Verbal and Adverbial Uses of Nouns*. Brill.

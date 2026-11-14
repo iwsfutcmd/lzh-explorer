@@ -5,6 +5,7 @@
   import { settings } from '../lib/settings.svelte';
   import { analysis, app, model, type SortKey } from '../lib/state.svelte';
   import { perMillion } from '../lib/stats';
+  import { MIN_TOKENS, posColumns } from '../lib/pos';
   import Han from './Han.svelte';
 
   interface Col {
@@ -17,6 +18,15 @@
 
   const isChars = $derived(app.view === 'chars');
   const k = $derived(analysis.keyness);
+  const showFw = $derived(app.cls === 'function' || !!app.fwCat);
+  const posCols = $derived(model.pos && analysis.matrix ? posColumns(analysis.matrix, model.pos) : null);
+
+  function fwLabel(item: string): string {
+    const e = model.fw?.items[item];
+    if (!e) return '';
+    const cats = e.cat.map((c) => t(`fw.${c}`)).join(', ');
+    return e.vernacular ? `${cats} (${t('fw.vernacular')})` : cats;
+  }
   const cols = $derived<Col[]>([
     { id: 'rank', label: 'col.rank', sort: 'count', num: true },
     { id: 'item', label: isChars ? 'col.char' : 'col.word', sort: 'item' },
@@ -26,6 +36,8 @@
           { id: 'gloss', label: 'col.gloss' as MessageKey },
         ]
       : []),
+    ...(showFw ? [{ id: 'fw', label: 'col.fw' as MessageKey }] : []),
+    ...(posCols ? [{ id: 'pos', label: 'col.pos' as MessageKey, title: 'col.pos.title' as MessageKey, sort: 'pos' as SortKey }] : []),
     { id: 'count', label: 'col.count', sort: 'count', num: true },
     { id: 'ipm', label: 'col.ipm', title: 'col.ipm.title', sort: 'count', num: true },
     { id: 'range', label: 'col.range', title: 'col.range.title', sort: 'range', num: true },
@@ -164,6 +176,18 @@
               </td>
             {:else if c.id === 'gloss'}
               <td class="gloss" lang="en" title={e?.def}>{e?.def ?? ''}</td>
+            {:else if c.id === 'fw'}
+              <td class="fw">{fwLabel(item)}</td>
+            {:else if c.id === 'pos' && posCols}
+              {@const d = posCols.dominant[i]}
+              {#if d >= 0}
+                {@const label = t(`upos.${model.pos!.upos[d]}` as MessageKey)}
+                <td class="pos" class:low={posCols.n[i] < MIN_TOKENS} title="{label} {i18n.pct(posCols.share[i], 0)} · n = {i18n.int(posCols.n[i])}"
+                  >{label} <span class="share">{i18n.pct(posCols.share[i], 0)}</span></td
+                >
+              {:else}
+                <td class="pos low">—</td>
+              {/if}
             {:else if c.id === 'count'}
               <td class="num count">{i18n.int(f.count[i])}</td>
             {:else if c.id === 'ipm'}
@@ -255,6 +279,9 @@
   .item button:focus-visible { outline: 2px solid var(--focus); }
   .reading { color: var(--ink-2); max-inline-size: 9rem; overflow: hidden; text-overflow: ellipsis; }
   .gloss { color: var(--ink-2); max-inline-size: 18rem; overflow: hidden; text-overflow: ellipsis; }
+  .pos, .fw { color: var(--ink-2); max-inline-size: 11rem; overflow: hidden; text-overflow: ellipsis; font-size: 0.8125rem; }
+  .pos .share { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .pos.low { color: var(--muted); }
   .lr { display: inline-flex; align-items: center; gap: 0.4rem; }
   .diverge { position: relative; inline-size: 3.5rem; block-size: 8px; background: var(--diverge-mid); border-radius: 4px; flex: none; }
   .diverge::after { content: ''; position: absolute; inset-inline-start: 50%; inset-block: -2px; inline-size: 1px; background: var(--axis); }
@@ -263,14 +290,18 @@
   .bar.neg { inset-inline-end: 50%; background: var(--series-2); border-start-start-radius: 4px; border-end-start-radius: 4px; }
   /* Drop the least important columns first as the table narrows. Every value
      stays available in the details panel and the CSV export. */
-  @container (max-width: 760px) { .col-gloss, td.gloss { display: none; } }
-  @container (max-width: 640px) { .col-cum, td.cum { display: none; } }
-  @container (max-width: 560px) { .col-reading, td.reading { display: none; } }
-  @container (max-width: 480px) { .col-range, td.range, .col-rank, td.rank { display: none; } }
-  @container (max-width: 1080px) { .has-ref :is(.col-gloss, td.gloss) { display: none; } }
-  @container (max-width: 960px) { .has-ref :is(.col-cum, td.cum) { display: none; } }
-  @container (max-width: 880px) { .has-ref :is(.col-reading, td.reading) { display: none; } }
-  @container (max-width: 800px) { .has-ref :is(.col-range, td.range) { display: none; } }
-  @container (max-width: 720px) { .has-ref :is(.col-rank, td.rank) { display: none; } }
+  @container (max-width: 860px) { .col-gloss, td.gloss { display: none; } }
+  @container (max-width: 740px) { .col-pos, td.pos { display: none; } }
+  @container (max-width: 660px) { .col-cum, td.cum { display: none; } }
+  @container (max-width: 580px) { .col-reading, td.reading { display: none; } }
+  @container (max-width: 500px) { .col-range, td.range, .col-rank, td.rank { display: none; } }
+  @container (max-width: 440px) { .col-fw, td.fw { display: none; } }
+  @container (max-width: 1180px) { .has-ref :is(.col-gloss, td.gloss) { display: none; } }
+  @container (max-width: 1080px) { .has-ref :is(.col-pos, td.pos) { display: none; } }
+  @container (max-width: 980px) { .has-ref :is(.col-cum, td.cum) { display: none; } }
+  @container (max-width: 900px) { .has-ref :is(.col-reading, td.reading) { display: none; } }
+  @container (max-width: 820px) { .has-ref :is(.col-range, td.range) { display: none; } }
+  @container (max-width: 740px) { .has-ref :is(.col-rank, td.rank) { display: none; } }
+  @container (max-width: 680px) { .has-ref :is(.col-fw, td.fw) { display: none; } }
   @container (max-width: 620px) { .has-ref :is(.col-dp, td.dp, .col-count, td.count) { display: none; } }
 </style>

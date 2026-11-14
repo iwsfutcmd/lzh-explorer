@@ -23,6 +23,14 @@
   --selected: light-dark(#cde2fb, #104281);
   --hover: light-dark(rgba(11, 11, 11, 0.04), rgba(255, 255, 255, 0.05));
   --diverge-mid: light-dark(#f0efec, #383835);
+  /* Diverging scale, blue (more) ↔ orange (less) around --diverge-mid.
+     Each arm validated as an ordinal ramp against both surfaces. */
+  --div-more-1: light-dark(#86b6ef, #1c5cab);
+  --div-more-2: light-dark(#2a78d6, #3987e5);
+  --div-more-3: light-dark(#184f95, #86b6ef);
+  --div-less-1: light-dark(#f0956d, #8a3a17);
+  --div-less-2: light-dark(#d95926, #d95926);
+  --div-less-3: light-dark(#9c3a12, #f4a27f);
 
   --radius: 6px;
   --header-h: 3.5rem;
