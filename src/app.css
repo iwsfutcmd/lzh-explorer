@@ -1,0 +1,142 @@
+/*
+ * Global styles. Layout uses logical properties throughout (inline/block,
+ * start/end), so the UI mirrors correctly in right-to-left locales and Han
+ * content can be set vertically without separate rules.
+ */
+
+:root {
+  color-scheme: light dark;
+  --page: light-dark(#f9f9f7, #0d0d0d);
+  --surface: light-dark(#fcfcfb, #1a1a19);
+  --surface-2: light-dark(#f0efec, #232321);
+  --ink: light-dark(#0b0b0b, #f0efec);
+  --ink-2: light-dark(#52514e, #c3c2b7);
+  --muted: #898781;
+  --grid: light-dark(#e1e0d9, #2c2c2a);
+  --axis: light-dark(#c3c2b7, #383835);
+  --border: light-dark(rgba(11, 11, 11, 0.1), rgba(255, 255, 255, 0.1));
+  --series-1: light-dark(#2a78d6, #3987e5);
+  --series-2: light-dark(#eb6834, #d95926);
+  --series-1-wash: light-dark(rgba(42, 120, 214, 0.1), rgba(57, 135, 229, 0.16));
+  --link: light-dark(#1c5cab, #6da7ec);
+  --focus: light-dark(#1c5cab, #86b6ef);
+  --selected: light-dark(#cde2fb, #104281);
+  --hover: light-dark(rgba(11, 11, 11, 0.04), rgba(255, 255, 255, 0.05));
+  --diverge-mid: light-dark(#f0efec, #383835);
+
+  --radius: 6px;
+  --header-h: 3.5rem;
+  --row-h: 2.25rem;
+
+  --ui-font: system-ui, -apple-system, 'Segoe UI', 'Noto Sans', sans-serif;
+  /* Fallbacks for rare characters, tried after the regional stack. (Each
+     regional stack lists both the Google Fonts and the Linux-distribution
+     names of Noto CJK.) */
+  --han-rare: 'BabelStone Han', 'HanaMinA', 'HanaMinB', 'Jigmo', 'Jigmo2', 'Jigmo3', 'TH-Tshyn-P0', 'TH-Tshyn-P1', 'TH-Tshyn-P2';
+
+  font-family: var(--ui-font);
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--page);
+  font-synthesis-weight: none;
+  text-size-adjust: 100%;
+}
+
+:root[data-theme='light'] { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; min-block-size: 100dvh; }
+h1, h2, h3, h4 { line-height: 1.25; margin-block: 0 0.5em; }
+h2 { font-size: 1.05rem; }
+h3 { font-size: 0.95rem; }
+p { margin-block: 0 0.75em; }
+a { color: var(--link); text-underline-offset: 0.15em; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* ----------------------------------------------------------- Han text ---- */
+
+.han {
+  font-family: var(--han-font), var(--han-rare), serif;
+  font-variant-east-asian: normal;
+  /* Never synthesize italics or bold for Han; it degrades the glyphs. */
+  font-synthesis: none;
+}
+:root { --han-font: 'Noto Serif TC', 'Noto Serif CJK TC', 'Source Han Serif TC', 'Songti TC', 'PMingLiU', 'MingLiU'; }
+:root[data-typeface='sans'] { --han-font: 'Noto Sans TC', 'Noto Sans CJK TC', 'Source Han Sans TC', 'PingFang TC', 'Microsoft JhengHei'; }
+
+.han:lang(zh-Hant-HK) { --han-font: 'Noto Serif HK', 'Noto Serif CJK HK', 'Source Han Serif HC', 'Noto Serif TC', 'Noto Serif CJK TC', 'Songti TC', 'MingLiU_HKSCS'; }
+.han:lang(zh-Hans) { --han-font: 'Noto Serif SC', 'Noto Serif CJK SC', 'Source Han Serif SC', 'Songti SC', 'STSong', 'SimSun'; }
+.han:lang(ja) { --han-font: 'Noto Serif JP', 'Noto Serif CJK JP', 'Source Han Serif', 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho'; }
+.han:lang(ko) { --han-font: 'Noto Serif KR', 'Noto Serif CJK KR', 'Source Han Serif K', 'AppleMyungjo', 'Batang'; }
+:root[data-typeface='sans'] .han:lang(zh-Hant-HK) { --han-font: 'Noto Sans HK', 'Noto Sans CJK HK', 'Source Han Sans HC', 'PingFang HK', 'Microsoft JhengHei'; }
+:root[data-typeface='sans'] .han:lang(zh-Hans) { --han-font: 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei'; }
+:root[data-typeface='sans'] .han:lang(ja) { --han-font: 'Noto Sans JP', 'Noto Sans CJK JP', 'Source Han Sans', 'Hiragino Sans', 'Yu Gothic', 'Meiryo'; }
+:root[data-typeface='sans'] .han:lang(ko) { --han-font: 'Noto Sans KR', 'Noto Sans CJK KR', 'Source Han Sans K', 'Apple SD Gothic Neo', 'Malgun Gothic'; }
+
+/* Vertical (tategaki / 直排) Han text. */
+.vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+/* ----------------------------------------------------------- controls ---- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding-block: 0.3rem;
+  padding-inline: 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--hover); }
+.btn[aria-pressed='true'] { background: var(--selected); }
+.btn-ghost { border-color: transparent; background: transparent; }
+
+input[type='search'], input[type='number'], input[type='text'], select {
+  padding-block: 0.3rem;
+  padding-inline: 0.5rem;
+  border: 1px solid var(--axis);
+  border-radius: var(--radius);
+  background: var(--surface);
+  min-inline-size: 0;
+}
+input[type='number'] { inline-size: 5.5rem; }
+
+label.field { display: grid; gap: 0.2rem; font-size: 0.875rem; color: var(--ink-2); }
+label.field > :is(select, input) { color: var(--ink); }
+
+.segmented { display: inline-flex; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.segmented > button { border: 0; border-radius: 0; background: var(--surface); padding-block: 0.3rem; padding-inline: 0.7rem; cursor: pointer; }
+.segmented > button + button { border-inline-start: 1px solid var(--border); }
+.segmented > button[aria-pressed='true'] { background: var(--selected); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) * 1.5);
+  padding: 1rem;
+}
+
+.muted { color: var(--muted); }
+.secondary { color: var(--ink-2); }
+.small { font-size: 0.8125rem; }
+.num { font-variant-numeric: tabular-nums; text-align: end; white-space: nowrap; }
+.visually-hidden {
+  position: absolute !important;
+  inline-size: 1px; block-size: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* Arrows and chevrons point the other way in RTL. */
+.flip-rtl:dir(rtl) { transform: scaleX(-1); }
+
+@media (forced-colors: active) {
+  .btn[aria-pressed='true'], .segmented > button[aria-pressed='true'] { outline: 2px solid CanvasText; }
+}

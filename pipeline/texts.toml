@@ -1,0 +1,626 @@
+# Curated metadata for the texts in the Schalmey (2021) frequency dataset.
+#
+# Each table is keyed by the text title *exactly as it appears* in the
+# dataset's CSV headers (`source_title`). Where the dataset's title contains
+# a typo or a non-standard variant character, `title` gives the normalized
+# traditional-character title shown in the UI; the original is kept so that
+# the mapping is auditable.
+#
+#   id       stable ASCII slug used in URLs and data files
+#   title    normalized title (traditional characters)
+#   pinyin   Hanyu Pinyin of the title
+#   en       English title / gloss
+#   year     completion year for the official histories, as given in the
+#            dataset's zhengshi_corpus.csv (negative = BCE). Omitted where the
+#            dataset gives none: dating of early texts is contested and we do
+#            not want to invent precision.
+#   note     why `title` differs from `source_title`, if it does
+
+# ---------------------------------------------------------------- Loewe ----
+
+["管子"]
+id = "guanzi"
+title = "管子"
+pinyin = "Guǎnzǐ"
+en = "Guanzi"
+
+["孝經"]
+id = "xiaojing"
+title = "孝經"
+pinyin = "Xiàojīng"
+en = "Classic of Filial Piety"
+
+["獨斷"]
+id = "duduan"
+title = "獨斷"
+pinyin = "Dúduàn"
+en = "Solitary Judgments"
+
+["九章算術"]
+id = "jiuzhang-suanshu"
+title = "九章算術"
+pinyin = "Jiǔzhāng suànshù"
+en = "Nine Chapters on the Mathematical Art"
+
+["釋名"]
+id = "shiming"
+title = "釋名"
+pinyin = "Shìmíng"
+en = "Explaining Names"
+
+["漢詩外傳"]
+id = "hanshi-waizhuan"
+title = "韓詩外傳"
+pinyin = "Hánshī wàizhuàn"
+en = "Outer Commentary to the Han Odes"
+note = "Dataset title has 漢 for 韓 (the Han 韓 school of the Odes)."
+
+["春秋穀梁"]
+id = "guliang"
+title = "春秋穀梁傳"
+pinyin = "Chūnqiū Gǔliáng zhuàn"
+en = "Guliang Commentary on the Spring and Autumn Annals"
+note = "Dataset title abbreviates 春秋穀梁傳."
+
+["論衡"]
+id = "lunheng"
+title = "論衡"
+pinyin = "Lùnhéng"
+en = "Discourses Weighed in the Balance"
+
+["吳越春秋"]
+id = "wuyue-chunqiu"
+title = "吳越春秋"
+pinyin = "Wú Yuè chūnqiū"
+en = "Annals of Wu and Yue"
+
+["風俗通義"]
+id = "fengsu-tongyi"
+title = "風俗通義"
+pinyin = "Fēngsú tōngyì"
+en = "Comprehensive Meaning of Customs"
+
+["春秋公羊"]
+id = "gongyang"
+title = "春秋公羊傳"
+pinyin = "Chūnqiū Gōngyáng zhuàn"
+en = "Gongyang Commentary on the Spring and Autumn Annals"
+note = "Dataset title abbreviates 春秋公羊傳."
+
+["大戴禮記"]
+id = "da-dai-liji"
+title = "大戴禮記"
+pinyin = "Dà Dài lǐjì"
+en = "Record of Rites of the Elder Dai"
+
+["淮南子"]
+id = "huainanzi"
+title = "淮南子"
+pinyin = "Huáinánzǐ"
+en = "Huainanzi"
+
+["春秋繁露"]
+id = "chunqiu-fanlu"
+title = "春秋繁露"
+pinyin = "Chūnqiū fánlù"
+en = "Luxuriant Dew of the Spring and Autumn Annals"
+
+["商君書"]
+id = "shangjunshu"
+title = "商君書"
+pinyin = "Shāngjūn shū"
+en = "Book of Lord Shang"
+
+["東觀漢記"]
+id = "dongguan-hanji"
+title = "東觀漢記"
+pinyin = "Dōngguān Hànjì"
+en = "Han Records of the Eastern Lodge"
+
+["白虎通"]
+id = "baihutong"
+title = "白虎通"
+pinyin = "Báihǔtōng"
+en = "Comprehensive Discussions in the White Tiger Hall"
+
+["越絕書"]
+id = "yuejueshu"
+title = "越絕書"
+pinyin = "Yuèjué shū"
+en = "Lost Records of the State of Yue"
+
+["宴子春秋"]
+id = "yanzi-chunqiu"
+title = "晏子春秋"
+pinyin = "Yànzǐ chūnqiū"
+en = "Annals of Master Yan"
+note = "Dataset title has 宴 for 晏 (Yan Ying 晏嬰)."
+
+["漢書"]
+id = "hanshu"
+title = "漢書"
+pinyin = "Hànshū"
+en = "Book of Han"
+year = 110
+note = "Text includes Yan Shigu's 顏師古 commentary (cf. the frequency of 師古)."
+
+["國語"]
+id = "guoyu"
+title = "國語"
+pinyin = "Guóyǔ"
+en = "Discourses of the States"
+
+["戰國策"]
+id = "zhanguoce"
+title = "戰國策"
+pinyin = "Zhànguó cè"
+en = "Strategies of the Warring States"
+
+["說苑"]
+id = "shuoyuan"
+title = "說苑"
+pinyin = "Shuōyuàn"
+en = "Garden of Persuasions"
+
+["列子"]
+id = "liezi"
+title = "列子"
+pinyin = "Lièzǐ"
+en = "Liezi"
+
+["慎子"]
+id = "shenzi"
+title = "慎子"
+pinyin = "Shènzǐ"
+en = "Shenzi"
+
+["新書"]
+id = "xinshu"
+title = "新書"
+pinyin = "Xīnshū"
+en = "New Writings"
+
+["穆天子傳"]
+id = "mu-tianzi-zhuan"
+title = "穆天子傳"
+pinyin = "Mù tiānzǐ zhuàn"
+en = "Account of Mu, Son of Heaven"
+
+["逸周書"]
+id = "yi-zhoushu"
+title = "逸周書"
+pinyin = "Yì Zhōushū"
+en = "Lost Book of Zhou"
+
+["黃帝内經"]
+id = "huangdi-neijing"
+title = "黃帝內經"
+pinyin = "Huángdì nèijīng"
+en = "Inner Classic of the Yellow Emperor"
+note = "Dataset title has 内 (U+5185) for 內 (U+5167)."
+
+["尚書 (書經)"]
+id = "shangshu"
+title = "尚書"
+pinyin = "Shàngshū"
+en = "Book of Documents"
+note = "Dataset title gives the alternative name: 尚書 (書經)."
+
+["史記"]
+id = "shiji"
+title = "史記"
+pinyin = "Shǐjì"
+en = "Records of the Grand Historian"
+year = -91
+
+["潛夫論"]
+id = "qianfulun"
+title = "潛夫論"
+pinyin = "Qiánfū lùn"
+en = "Discourses of a Recluse"
+
+["鹽鐡論"]
+id = "yantielun"
+title = "鹽鐵論"
+pinyin = "Yántiě lùn"
+en = "Discourses on Salt and Iron"
+note = "Dataset title has 鐡 (U+9421) for 鐵 (U+9435)."
+
+["新論"]
+id = "xinlun"
+title = "新論"
+pinyin = "Xīnlùn"
+en = "New Discussions"
+
+["禮記"]
+id = "liji"
+title = "禮記"
+pinyin = "Lǐjì"
+en = "Book of Rites"
+
+["周髀算經"]
+id = "zhoubi-suanjing"
+title = "周髀算經"
+pinyin = "Zhōubì suànjīng"
+en = "Zhou Gnomon Classic of Computation"
+
+["爾雅"]
+id = "erya"
+title = "爾雅"
+pinyin = "Ěryǎ"
+en = "Erya"
+
+["詩經"]
+id = "shijing"
+title = "詩經"
+pinyin = "Shījīng"
+en = "Book of Odes"
+
+["中論"]
+id = "zhonglun"
+title = "中論"
+pinyin = "Zhōnglùn"
+en = "Balanced Discourses"
+
+["周禮"]
+id = "zhouli"
+title = "周禮"
+pinyin = "Zhōulǐ"
+en = "Rites of Zhou"
+
+["山海經"]
+id = "shanhaijing"
+title = "山海經"
+pinyin = "Shānhǎi jīng"
+en = "Classic of Mountains and Seas"
+
+["漢記"]
+id = "hanji"
+title = "漢紀"
+pinyin = "Hànjì"
+en = "Annals of Han"
+note = "Xun Yue's 荀悅 Han ji, usually written 漢紀; the dataset has 漢記."
+
+["新語"]
+id = "xinyu"
+title = "新語"
+pinyin = "Xīnyǔ"
+en = "New Discourses"
+
+["荀子"]
+id = "xunzi"
+title = "荀子"
+pinyin = "Xúnzǐ"
+en = "Xunzi"
+
+["竹書紀年"]
+id = "zhushu-jinian"
+title = "竹書紀年"
+pinyin = "Zhúshū jìnián"
+en = "Bamboo Annals"
+
+["易經"]
+id = "yijing"
+title = "易經"
+pinyin = "Yìjīng"
+en = "Book of Changes"
+
+["孟子"]
+id = "mengzi"
+title = "孟子"
+pinyin = "Mèngzǐ"
+en = "Mencius"
+
+["法言"]
+id = "fayan"
+title = "法言"
+pinyin = "Fǎyán"
+en = "Exemplary Sayings"
+
+["申鋻"]
+id = "shenjian"
+title = "申鑒"
+pinyin = "Shēnjiàn"
+en = "Extended Reflections"
+note = "Dataset title has the variant 鋻 for 鑒."
+
+["說文解字"]
+id = "shuowen-jiezi"
+title = "說文解字"
+pinyin = "Shuōwén jiězì"
+en = "Explaining Graphs and Analyzing Characters"
+
+["春秋左傳"]
+id = "zuozhuan"
+title = "春秋左傳"
+pinyin = "Chūnqiū Zuǒzhuàn"
+en = "Zuo Tradition"
+
+["韓非子"]
+id = "hanfeizi"
+title = "韓非子"
+pinyin = "Hán Fēizǐ"
+en = "Han Feizi"
+
+["莊子"]
+id = "zhuangzi"
+title = "莊子"
+pinyin = "Zhuāngzǐ"
+en = "Zhuangzi"
+
+["老子道德經"]
+id = "laozi"
+title = "老子道德經"
+pinyin = "Lǎozǐ Dàodéjīng"
+en = "Laozi (Daodejing)"
+
+["太玄經"]
+id = "taixuanjing"
+title = "太玄經"
+pinyin = "Tàixuán jīng"
+en = "Canon of Supreme Mystery"
+
+["孔子家語"]
+id = "kongzi-jiayu"
+title = "孔子家語"
+pinyin = "Kǒngzǐ jiāyǔ"
+en = "School Sayings of Confucius"
+
+["墨子"]
+id = "mozi"
+title = "墨子"
+pinyin = "Mòzǐ"
+en = "Mozi"
+
+["論語"]
+id = "lunyu"
+title = "論語"
+pinyin = "Lúnyǔ"
+en = "Analects"
+
+["鹖冠子"]
+id = "heguanzi"
+title = "鶡冠子"
+pinyin = "Héguānzǐ"
+en = "Pheasant Cap Master"
+note = "Dataset title uses the simplified component form 鹖 for 鶡."
+
+["新序"]
+id = "xinxu"
+title = "新序"
+pinyin = "Xīnxù"
+en = "New Prefaces"
+
+["呂氏春秋"]
+id = "lushi-chunqiu"
+title = "呂氏春秋"
+pinyin = "Lǚshì chūnqiū"
+en = "Annals of Lü Buwei"
+
+["楚辭"]
+id = "chuci"
+title = "楚辭"
+pinyin = "Chǔcí"
+en = "Songs of Chu"
+
+["儀禮"]
+id = "yili"
+title = "儀禮"
+pinyin = "Yílǐ"
+en = "Etiquette and Ceremonial"
+
+["孫子兵法"]
+id = "sunzi"
+title = "孫子兵法"
+pinyin = "Sūnzǐ bīngfǎ"
+en = "The Art of War"
+
+["公孫龍子"]
+id = "gongsun-longzi"
+title = "公孫龍子"
+pinyin = "Gōngsūn Lóngzǐ"
+en = "Gongsun Longzi"
+
+# ------------------------------------------------- Official histories ----
+# 史記 and 漢書 (above) are shared with the Loewe corpus; the dataset's two
+# copies are identical, so each is stored once.
+
+["三國志"]
+id = "sanguozhi"
+title = "三國志"
+pinyin = "Sānguó zhì"
+en = "Records of the Three Kingdoms"
+year = 290
+
+["後漢書"]
+id = "houhanshu"
+title = "後漢書"
+pinyin = "Hòu Hànshū"
+en = "Book of the Later Han"
+year = 445
+
+["宋書"]
+id = "songshu"
+title = "宋書"
+pinyin = "Sòngshū"
+en = "Book of Song"
+year = 510
+
+["南齊書"]
+id = "nanqishu"
+title = "南齊書"
+pinyin = "Nán Qíshū"
+en = "Book of Southern Qi"
+year = 510
+
+["魏書"]
+id = "weishu"
+title = "魏書"
+pinyin = "Wèishū"
+en = "Book of Wei"
+year = 554
+
+["梁書"]
+id = "liangshu"
+title = "梁書"
+pinyin = "Liángshū"
+en = "Book of Liang"
+year = 635
+
+["陳書"]
+id = "chenshu"
+title = "陳書"
+pinyin = "Chénshū"
+en = "Book of Chen"
+year = 636
+
+["北齊書"]
+id = "beiqishu"
+title = "北齊書"
+pinyin = "Běi Qíshū"
+en = "Book of Northern Qi"
+year = 636
+
+["周書"]
+id = "zhoushu"
+title = "周書"
+pinyin = "Zhōushū"
+en = "Book of Zhou"
+year = 636
+
+["隋書"]
+id = "suishu"
+title = "隋書"
+pinyin = "Suíshū"
+en = "Book of Sui"
+year = 636
+
+["晉書"]
+id = "jinshu"
+title = "晉書"
+pinyin = "Jìnshū"
+en = "Book of Jin"
+year = 648
+
+["南史"]
+id = "nanshi"
+title = "南史"
+pinyin = "Nánshǐ"
+en = "History of the Southern Dynasties"
+year = 659
+
+["北史"]
+id = "beishi"
+title = "北史"
+pinyin = "Běishǐ"
+en = "History of the Northern Dynasties"
+year = 659
+
+["舊唐書"]
+id = "jiu-tangshu"
+title = "舊唐書"
+pinyin = "Jiù Tángshū"
+en = "Old Book of Tang"
+year = 945
+
+["舊五代史"]
+id = "jiu-wudaishi"
+title = "舊五代史"
+pinyin = "Jiù Wǔdài shǐ"
+en = "Old History of the Five Dynasties"
+year = 974
+
+["新五代史"]
+id = "xin-wudaishi"
+title = "新五代史"
+pinyin = "Xīn Wǔdài shǐ"
+en = "New History of the Five Dynasties"
+year = 1039
+
+["新唐書"]
+id = "xin-tangshu"
+title = "新唐書"
+pinyin = "Xīn Tángshū"
+en = "New Book of Tang"
+year = 1060
+
+["宋史"]
+id = "songshi"
+title = "宋史"
+pinyin = "Sòngshǐ"
+en = "History of Song"
+year = 1343
+
+["金史"]
+id = "jinshi"
+title = "金史"
+pinyin = "Jīnshǐ"
+en = "History of Jin"
+year = 1343
+
+["辽史"]
+id = "liaoshi"
+title = "遼史"
+pinyin = "Liáoshǐ"
+en = "History of Liao"
+year = 1344
+note = "Dataset title is in simplified characters (辽史)."
+
+["元史"]
+id = "yuanshi"
+title = "元史"
+pinyin = "Yuánshǐ"
+en = "History of Yuan"
+year = 1369
+
+["明史"]
+id = "mingshi"
+title = "明史"
+pinyin = "Míngshǐ"
+en = "History of Ming"
+year = 1739
+
+["清史稿"]
+id = "qingshigao"
+title = "清史稿"
+pinyin = "Qīngshǐ gǎo"
+en = "Draft History of Qing"
+year = 1928
+
+# ---------------------------------------------------------- Six novels ----
+
+["紅樓夢"]
+id = "hongloumeng"
+title = "紅樓夢"
+pinyin = "Hónglóu mèng"
+en = "Dream of the Red Chamber"
+
+["金瓶梅"]
+id = "jinpingmei"
+title = "金瓶梅"
+pinyin = "Jīn Píng Méi"
+en = "The Plum in the Golden Vase"
+
+["儒林外史"]
+id = "rulin-waishi"
+title = "儒林外史"
+pinyin = "Rúlín wàishǐ"
+en = "The Scholars"
+
+["三國志演義"]
+id = "sanguo-yanyi"
+title = "三國志演義"
+pinyin = "Sānguó zhì yǎnyì"
+en = "Romance of the Three Kingdoms"
+
+["水滸傳"]
+id = "shuihuzhuan"
+title = "水滸傳"
+pinyin = "Shuǐhǔ zhuàn"
+en = "Water Margin"
+
+["西遊記"]
+id = "xiyouji"
+title = "西遊記"
+pinyin = "Xīyóu jì"
+en = "Journey to the West"
