@@ -73,8 +73,10 @@ export function negotiate(preferred: readonly string[]): string {
 // Bidi isolates around interpolated values, so a Latin, Han or numeric value
 // never reorders the surrounding text (UAX #9, "Unicode Bidirectional
 // Algorithm", §2.7).
-const FSI = '⁨';
-const PDI = '⁩';
+// Built at runtime so no literal bidi controls appear in the (transpiled)
+// source, which the Svelte compiler rightly flags.
+const FSI = String.fromCharCode(0x2068);
+const PDI = String.fromCharCode(0x2069);
 
 export type Params = Record<string, string | number>;
 
